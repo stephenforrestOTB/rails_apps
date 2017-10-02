@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :pages
-  resources :posts
+  resources :posts do
+    resources :comments
+  end
   resources :users, except: [:new, :create]
   get "/generate", to: "posts#generate"
   root "pages#main"

@@ -1,11 +1,15 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :current_user, only: [:generate]
+  before_action :check_admin, only: [:generate]
   def generate
-    100.times{
-      n = rand(0...1000)
-      newpost = Post.new(:title => "GENERATED POST ##{DateTime.now}", :body => "I Like #{n} beans on my toast" )
-      newpost.save
-    }
+    if @current_user.admin?
+      100.times{
+        n = rand(0...1000)
+        newpost = Post.new(:title => "#{@current_user.username} GENERATED POST @#{DateTime.now}", :body => "I Like #{n} beans on my toast", :user => @current_user)
+        newpost.save
+      }
+    end
   end
   # GET /posts
   # GET /posts.json
@@ -16,6 +20,7 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
+    @comments = @post.comments.all.paginate(:page => params[:page], :per_page => 5)
   end
 
   # GET /posts/new

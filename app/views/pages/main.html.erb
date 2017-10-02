@@ -1,0 +1,25 @@
+<p>
+  <h1> Welcome to my blog <%= @current_user ? @current_user.username : "" %> !</h1>
+</p>
+<h2> Below are the 5 latest posts:</h2>
+
+<%= will_paginate @posts %>
+<table>
+  <th> POST NAME </th>
+  <th> POST BODY </th>
+  <% @posts.each do |post| %>
+  <tr>
+    <td><%= post.title %></td>
+    <td><%= post.body %></td>
+    <td><%= link_to "Edit", edit_post_url(post.id) %> </td>
+    <td><%= link_to "Destroy", post, method: :delete, data: { confirm: 'Are you sure?' } %> </td>
+  </tr>
+  <% end %>
+</table>
+
+<% if @current_user %>
+<%= link_to "logout", "/logout" %>
+<% else %>
+<%= link_to "login", "/login" %>
+<%= link_to "signup", "/signup" %>
+<% end %>
